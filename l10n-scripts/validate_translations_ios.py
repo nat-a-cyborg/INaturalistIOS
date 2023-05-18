@@ -17,15 +17,8 @@ def main():
 
     translations_basedir = args.translations_dir
 
-    # commonly used invalid matches
-        # %2$s
     invalid_match = re.compile(r'%\d*\$s')
 
-    # realistic likely valid matches:
-        # %1$.5f
-        # %@
-        # %3$@
-        # %.5f
     valid_match = re.compile(r'%\d\$\.\df|%@|%\d\$@|%\.\df')
 
     for language in os.listdir(translations_basedir):
@@ -36,9 +29,9 @@ def main():
             sf_path = os.path.join(lang_iosdir, stringsfile)
             strings = localizable.parse_strings(filename=sf_path)
             for string in strings:
-                # look for invalids
-                invalid_matches = re.findall(invalid_match, string["value"])
-                if invalid_matches:
+                if invalid_matches := re.findall(
+                    invalid_match, string["value"]
+                ):
                     print(sf_path)
                     print(string["key"])
                     print(string["value"])
